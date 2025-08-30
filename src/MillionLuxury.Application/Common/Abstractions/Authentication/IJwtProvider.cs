@@ -1,6 +1,6 @@
 namespace MillionLuxury.Application.Common.Abstractions.Authentication;
 
-using MillionLuxury.Domain.User;
+using MillionLuxury.Domain.Users;
 
 public interface IJwtProvider
 {

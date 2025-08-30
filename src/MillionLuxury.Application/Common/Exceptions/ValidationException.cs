@@ -1,4 +1,4 @@
-namespace RideHubb.Application.Common.Exceptions;
+namespace MillionLuxury.Application.Common.Exceptions;
 
 public sealed class ValidationException : Exception
 {

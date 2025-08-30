@@ -2,7 +2,7 @@ namespace MillionLuxury.Application.Common.Abstractions.Behaviors;
 
 using MediatR;
 using Microsoft.Extensions.Logging;
-using RideHubb.Domain.Abstractions;
+using MillionLuxury.Domain.Abstractions;
 using Serilog.Context;
 
 internal sealed class LoggingBehavior<TRequest, TResponse>

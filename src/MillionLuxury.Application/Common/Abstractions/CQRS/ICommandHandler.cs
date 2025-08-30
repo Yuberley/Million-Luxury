@@ -1,7 +1,7 @@
 namespace MillionLuxury.Application.Common.Abstractions.CQRS;
 
 using MediatR;
-using RideHubb.Domain.Abstractions;
+using MillionLuxury.Domain.Abstractions;
 
 public interface ICommandHandler<in TCommand> : IRequestHandler<TCommand, Result>
     where TCommand : ICommand
