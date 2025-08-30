@@ -1,0 +1,6 @@
+@MillionLuxury.WebApi_HostAddress = http://localhost:5152
+
+GET {{MillionLuxury.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
