@@ -1,0 +1,40 @@
+name: ${PROJECT_NAME}
+
+services:
+  millionluxury.web.api:
+    image: ${DOCKER_REGISTRY-}millionluxury.webapi
+    container_name: ${PROJECT_NAME}.api
+    build:
+      context: ..
+      dockerfile: src/MillionLuxury.WebApi/Dockerfile
+    depends_on:
+      - millionluxury.database
+    ports:
+     - ${API_HTTP_PORT}:8080
+     - ${API_HTTPS_PORT}:8081
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_HTTPS_PORT=${API_HTTPS_PORT}
+    restart: on-failure
+     
+  millionluxury.database:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    container_name: ${PROJECT_NAME}.sqlserver.db
+    networks:
+      - app-network-public
+    restart: on-failure
+    env_file:
+      - sqlserver.env
+    ports:
+      - '1433:1433'
+    volumes:
+      - sqlserver-data:/var/opt/mssql   # solo este
+
+
+networks:
+  app-network-public:
+    driver: bridge
+
+volumes:
+  sqlserver-data:
+    driver: local
