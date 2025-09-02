@@ -16,12 +16,14 @@ services:
       - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
       - ASPNETCORE_HTTPS_PORT=${API_HTTPS_PORT}
     restart: on-failure
+    networks:
+      - millionluxury-network-public
      
   millionluxury.database:
     image: mcr.microsoft.com/mssql/server:2019-latest
     container_name: ${PROJECT_NAME}.sqlserver.db
     networks:
-      - app-network-public
+      - millionluxury-network-public
     restart: on-failure
     env_file:
       - sqlserver.env
@@ -30,11 +32,26 @@ services:
     volumes:
       - sqlserver-data:/var/opt/mssql   # solo este
 
+  minio:
+    image: minio/minio:latest
+    container_name: ${PROJECT_NAME}.minio
+    restart: on-failure
+    env_file:
+      - minio.env
+    volumes:
+      - vol_minio_storage:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    networks:
+      - millionluxury-network-public
+    command: server --console-address ":9001" /data
 
 networks:
-  app-network-public:
+  millionluxury-network-public:
     driver: bridge
 
 volumes:
   sqlserver-data:
     driver: local
+  vol_minio_storage: {}

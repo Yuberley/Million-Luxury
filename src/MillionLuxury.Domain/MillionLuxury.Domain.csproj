@@ -12,6 +12,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Owners\Resources\OwnerResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OwnerResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="PropertyTraces\Resources\PropertyTraceResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PropertyTraceResources.resx</DependentUpon>
+    </Compile>
     <Compile Update="Users\Resources\UserResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -20,6 +30,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="Owners\Resources\OwnerResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>OwnerResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="PropertyTraces\Resources\PropertyTraceResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>PropertyTraceResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Update="Users\Resources\UserResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>UserResources.Designer.cs</LastGenOutput>

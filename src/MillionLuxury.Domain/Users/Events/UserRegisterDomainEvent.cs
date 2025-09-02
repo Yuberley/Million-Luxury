@@ -1,4 +1,4 @@
-namespace MillionLuxury.Domain.User.Events;
+namespace MillionLuxury.Domain.Users.Events;
 
 using MillionLuxury.Domain.Abstractions;
 

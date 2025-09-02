@@ -22,6 +22,179 @@ namespace MillionLuxury.Infrastructure.Database.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MillionLuxury.Domain.Owners.Owner", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("Birthday")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("birthday");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("name");
+
+                    b.Property<string>("PhotoPath")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("photo_path");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_owners");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("ix_owners_name");
+
+                    b.ToTable("owners", (string)null);
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.Properties.Property", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("InternalCode")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("internal_code");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("owner_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("updated_at");
+
+                    b.Property<int>("Year")
+                        .HasColumnType("int")
+                        .HasColumnName("year");
+
+                    b.HasKey("Id")
+                        .HasName("pk_properties");
+
+                    b.HasIndex("InternalCode")
+                        .IsUnique()
+                        .HasDatabaseName("ix_properties_internal_code");
+
+                    b.HasIndex("OwnerId")
+                        .HasDatabaseName("ix_properties_owner_id");
+
+                    b.ToTable("properties", (string)null);
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.Properties.PropertyImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("file_name");
+
+                    b.Property<string>("FilePath")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("file_path");
+
+                    b.Property<bool>("IsEnabled")
+                        .HasColumnType("bit")
+                        .HasColumnName("is_enabled");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("property_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_property_images");
+
+                    b.HasIndex("IsEnabled")
+                        .HasDatabaseName("ix_property_images_is_enabled");
+
+                    b.HasIndex("PropertyId")
+                        .HasDatabaseName("ix_property_images_property_id");
+
+                    b.ToTable("PropertyImages", (string)null);
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.PropertyTraces.PropertyTrace", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime>("DateSale")
+                        .HasColumnType("datetime2")
+                        .HasColumnName("date_sale");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)")
+                        .HasColumnName("name");
+
+                    b.Property<Guid>("PropertyId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("property_id");
+
+                    b.Property<decimal>("Tax")
+                        .HasColumnType("decimal(18,2)")
+                        .HasColumnName("tax");
+
+                    b.HasKey("Id")
+                        .HasName("pk_property_traces");
+
+                    b.HasIndex("PropertyId")
+                        .HasDatabaseName("ix_property_traces_property_id");
+
+                    b.ToTable("property_traces", (string)null);
+                });
+
             modelBuilder.Entity("MillionLuxury.Domain.Users.User", b =>
                 {
                     b.Property<Guid>("Id")
@@ -62,6 +235,236 @@ namespace MillionLuxury.Infrastructure.Database.Migrations
                         .HasDatabaseName("ix_users_email");
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.Owners.Owner", b =>
+                {
+                    b.OwnsOne("MillionLuxury.Domain.Owners.Owner.Address#MillionLuxury.Domain.SharedValueObjects.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("OwnerId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_city");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_country");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_state");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_street");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_zip_code");
+
+                            b1.HasKey("OwnerId");
+
+                            b1.ToTable("owners", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("OwnerId")
+                                .HasConstraintName("fk_owners_owners_id");
+                        });
+
+                    b.Navigation("Address")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.Properties.Property", b =>
+                {
+                    b.HasOne("MillionLuxury.Domain.Owners.Owner", null)
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("fk_properties_owners_owner_id");
+
+                    b.OwnsOne("MillionLuxury.Domain.Properties.Property.Address#MillionLuxury.Domain.SharedValueObjects.Address", "Address", b1 =>
+                        {
+                            b1.Property<Guid>("PropertyId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_city");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_country");
+
+                            b1.Property<string>("State")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_state");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_street");
+
+                            b1.Property<string>("ZipCode")
+                                .IsRequired()
+                                .HasMaxLength(50)
+                                .HasColumnType("nvarchar(50)")
+                                .HasColumnName("address_zip_code");
+
+                            b1.HasKey("PropertyId");
+
+                            b1.ToTable("properties", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId")
+                                .HasConstraintName("fk_properties_properties_id");
+                        });
+
+                    b.OwnsOne("MillionLuxury.Domain.Properties.Property.Details#MillionLuxury.Domain.Properties.ValueObjects.PropertyDetails", "Details", b1 =>
+                        {
+                            b1.Property<Guid>("PropertyId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("id");
+
+                            b1.Property<decimal>("AreaInSquareMeters")
+                                .HasColumnType("decimal(10,2)")
+                                .HasColumnName("details_area_in_square_meters");
+
+                            b1.Property<int>("Bathrooms")
+                                .HasColumnType("int")
+                                .HasColumnName("details_bathrooms");
+
+                            b1.Property<int>("Bedrooms")
+                                .HasColumnType("int")
+                                .HasColumnName("details_bedrooms");
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasMaxLength(2000)
+                                .HasColumnType("nvarchar(2000)")
+                                .HasColumnName("details_description");
+
+                            b1.Property<int>("PropertyType")
+                                .HasColumnType("int")
+                                .HasColumnName("details_property_type");
+
+                            b1.HasKey("PropertyId");
+
+                            b1.ToTable("properties", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId")
+                                .HasConstraintName("fk_properties_properties_id");
+                        });
+
+                    b.OwnsOne("MillionLuxury.Domain.Properties.Property.Price#MillionLuxury.Domain.SharedValueObjects.Money", "Price", b1 =>
+                        {
+                            b1.Property<Guid>("PropertyId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("id");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("price_amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("price_currency");
+
+                            b1.HasKey("PropertyId");
+
+                            b1.ToTable("properties", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyId")
+                                .HasConstraintName("fk_properties_properties_id");
+                        });
+
+                    b.Navigation("Address")
+                        .IsRequired();
+
+                    b.Navigation("Details")
+                        .IsRequired();
+
+                    b.Navigation("Price")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.Properties.PropertyImage", b =>
+                {
+                    b.HasOne("MillionLuxury.Domain.Properties.Property", null)
+                        .WithMany("Images")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_property_images_property_property_id");
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.PropertyTraces.PropertyTrace", b =>
+                {
+                    b.HasOne("MillionLuxury.Domain.Properties.Property", null)
+                        .WithMany("Traces")
+                        .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_property_traces_properties_property_id");
+
+                    b.OwnsOne("MillionLuxury.Domain.PropertyTraces.PropertyTrace.Value#MillionLuxury.Domain.SharedValueObjects.Money", "Value", b1 =>
+                        {
+                            b1.Property<Guid>("PropertyTraceId")
+                                .HasColumnType("uniqueidentifier")
+                                .HasColumnName("id");
+
+                            b1.Property<decimal>("Amount")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("value_amount");
+
+                            b1.Property<string>("Currency")
+                                .IsRequired()
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("value_currency");
+
+                            b1.HasKey("PropertyTraceId");
+
+                            b1.ToTable("property_traces", (string)null);
+
+                            b1.WithOwner()
+                                .HasForeignKey("PropertyTraceId")
+                                .HasConstraintName("fk_property_traces_property_traces_id");
+                        });
+
+                    b.Navigation("Value")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MillionLuxury.Domain.Properties.Property", b =>
+                {
+                    b.Navigation("Images");
+
+                    b.Navigation("Traces");
                 });
 #pragma warning restore 612, 618
         }

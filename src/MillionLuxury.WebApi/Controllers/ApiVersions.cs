@@ -1,4 +1,4 @@
-namespace MillionLuxury.Web.API.Controllers;
+namespace MillionLuxury.WebApi.Controllers;
 
 internal static class ApiVersions
 {

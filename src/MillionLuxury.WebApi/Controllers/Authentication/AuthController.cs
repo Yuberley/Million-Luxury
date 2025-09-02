@@ -1,4 +1,4 @@
-namespace MillionLuxury.Web.API.Controllers.Authentication;
+namespace MillionLuxury.WebApi.Controllers.Authentication;
 
 #region Usings
 using Asp.Versioning;
@@ -9,7 +9,7 @@ using MillionLuxury.Application.Users.LogIn;
 using MillionLuxury.Application.Users.Register;
 using MillionLuxury.Application.Users.WhoAmI;
 using MillionLuxury.Domain.Abstractions;
-using MillionLuxury.Domain.Users; 
+using MillionLuxury.Domain.Users;
 #endregion
 
 [ApiController]
@@ -23,7 +23,7 @@ public class AuthController(ISender sender) : ControllerBase
     public async Task<IActionResult> LogIn(LogInRequest request, CancellationToken cancellationToken)
     {
         var command = new LogInUserCommand(request.Email, request.Password);
-        Result<AccessTokenResponse> result = await _sender.Send(command, cancellationToken);
+        var result = await _sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result.Value) : HandleError(result.Error);
     }
@@ -32,7 +32,7 @@ public class AuthController(ISender sender) : ControllerBase
     public async Task<IActionResult> Register(RegisterRequest request, CancellationToken cancellationToken)
     {
         var command = new RegisterUserCommand(request.Email, request.Password, request.Roles);
-        Result<Guid> result = await _sender.Send(command, cancellationToken);
+        var result = await _sender.Send(command, cancellationToken);
 
         return result.IsSuccess ? Ok(result) : HandleError(result.Error);
     }
@@ -43,7 +43,7 @@ public class AuthController(ISender sender) : ControllerBase
     {
         var query = new WhoAmIUserQuery();
 
-        Result<Application.Users.Dtos.User> result = await _sender.Send(query, cancellationToken);
+        var result = await _sender.Send(query, cancellationToken);
 
         return Ok(result.Value);
 

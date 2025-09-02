@@ -4,12 +4,17 @@ using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MillionLuxury.Application;
 using MillionLuxury.Infrastructure;
+using MillionLuxury.Infrastructure.Storage.OptionsSetup;
 using MillionLuxury.Web.API.Extensions;
 using MillionLuxury.Web.API.OpenApi;
-using MillionLuxury.Web.API.OptionsSetup; 
+using MillionLuxury.Web.API.OptionsSetup;
 #endregion
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.ConfigureOptions<MinioOptionsSetup>();
+builder.Services.ConfigureOptions<JwtOptionsSetup>();
+builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -17,9 +22,6 @@ builder.Services.AddPresentation();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer();
-
-builder.Services.ConfigureOptions<JwtOptionsSetup>();
-builder.Services.ConfigureOptions<JwtBearerOptionsSetup>();
 
 builder.Services.AddAuthorization();
 
@@ -38,7 +40,7 @@ RouteGroupBuilder versionedGroup = app
 if (app.Environment.IsDevelopment())
 {
     app.UseSwaggerWithUi();
-    //app.ApplyMigrations();
+    app.ApplyMigrations();
 }
 
 app.UseHttpsRedirection();

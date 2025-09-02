@@ -1,4 +1,4 @@
-namespace MillionLuxury.Infrastructure.Database.Configurations;
+namespace MillionLuxury.Infrastructure.Database.Mappings.User;
 
 #region Usings
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using MillionLuxury.Domain.Users;
 using MillionLuxury.Domain.Users.ValueObjects;
 #endregion
 
-internal sealed class UserConfigurations : IEntityTypeConfiguration<User>
+internal sealed class UserMapping : IEntityTypeConfiguration<User>
 {
     #region Constants
     private const string TableName = "users";

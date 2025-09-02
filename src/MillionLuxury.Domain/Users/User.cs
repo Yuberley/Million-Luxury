@@ -1,8 +1,8 @@
-﻿namespace MillionLuxury.Domain.Users;
+namespace MillionLuxury.Domain.Users;
 
 #region Usings
 using MillionLuxury.Domain.Abstractions;
-using MillionLuxury.Domain.User.Events;
+using MillionLuxury.Domain.Users.Events;
 using MillionLuxury.Domain.Users.ValueObjects; 
 #endregion
 

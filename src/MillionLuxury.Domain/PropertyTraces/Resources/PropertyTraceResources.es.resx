@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="PropertyTraceNameRequired" xml:space="preserve">
+    <value>El nombre del rastro de propiedad es requerido</value>
+  </data>
+  <data name="PropertyTraceNameMaxLength" xml:space="preserve">
+    <value>El nombre del rastro de propiedad no puede exceder 200 caracteres</value>
+  </data>
+  <data name="PropertyTraceValueRequired" xml:space="preserve">
+    <value>El valor del rastro de propiedad es requerido</value>
+  </data>
+  <data name="PropertyTraceValueMustBePositive" xml:space="preserve">
+    <value>El valor del rastro de propiedad debe ser positivo</value>
+  </data>
+  <data name="PropertyTraceTaxRequired" xml:space="preserve">
+    <value>El impuesto del rastro de propiedad es requerido</value>
+  </data>
+  <data name="PropertyTraceTaxMustBePositive" xml:space="preserve">
+    <value>El impuesto del rastro de propiedad debe ser positivo</value>
+  </data>
+  <data name="PropertyTraceDateSaleRequired" xml:space="preserve">
+    <value>La fecha de venta del rastro de propiedad es requerida</value>
+  </data>
+  <data name="PropertyTraceDateSaleInvalidDate" xml:space="preserve">
+    <value>La fecha de venta del rastro de propiedad debe ser una fecha válida</value>
+  </data>
+  <data name="PropertyTracePropertyIdRequired" xml:space="preserve">
+    <value>El ID de la propiedad es requerido</value>
+  </data>
+  <data name="PropertyTraceNotFound" xml:space="preserve">
+    <value>Rastro de propiedad no encontrado</value>
+  </data>
+  <data name="PropertyTraceCannotBeDeleted" xml:space="preserve">
+    <value>El rastro de propiedad no puede ser eliminado</value>
+  </data>
+  <data name="PropertyTraceCreatedSuccessfully" xml:space="preserve">
+    <value>Rastro de propiedad creado exitosamente</value>
+  </data>
+  <data name="PropertyTraceUpdatedSuccessfully" xml:space="preserve">
+    <value>Rastro de propiedad actualizado exitosamente</value>
+  </data>
+  <data name="PropertyTraceDeletedSuccessfully" xml:space="preserve">
+    <value>Rastro de propiedad eliminado exitosamente</value>
+  </data>
+</root>

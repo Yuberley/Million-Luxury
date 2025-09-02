@@ -1,4 +1,4 @@
-namespace MillionLuxury.Web.API.Controllers.Authentication;
+namespace MillionLuxury.WebApi.Controllers.Authentication;
 
 public sealed record RegisterRequest(
     string Email,

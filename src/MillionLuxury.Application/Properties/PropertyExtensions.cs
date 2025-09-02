@@ -1,0 +1,124 @@
+namespace MillionLuxury.Application.Properties;
+
+#region Usings
+using MillionLuxury.Domain.Properties;
+using MillionLuxury.Domain.SharedValueObjects;
+using DomainPropertyType = Domain.Properties.ValueObjects.PropertyType;
+using DtoPropertyType = Dtos.PropertyType;
+#endregion
+
+internal static class PropertyExtensions
+{
+    internal static Dtos.PropertyResponse ToDto(this Property property)
+    {
+        return new Dtos.PropertyResponse(
+            property.Id,
+            property.Name,
+            property.Address.ToDto(),
+            property.Price.Amount,
+            property.Price.Currency.Code,
+            property.InternalCode,
+            property.Year,
+            property.OwnerId,
+            property.Status,
+            property.Details.ToDto(),
+            property.CreatedAt,
+            property.UpdatedAt,
+            property.Images.Select(img => img.ToDto())
+        );
+    }
+
+    internal static Dtos.PropertyImageResponse ToDto(this PropertyImage image)
+    {
+        return new Dtos.PropertyImageResponse(
+            image.Id,
+            image.FileName,
+            image.FilePath,
+            image.IsEnabled,
+            image.CreatedAt
+        );
+    }
+
+    internal static Property ToDomain(this Dtos.CreatePropertyRequest request, Guid ownerId, DateTime createdAt)
+    {
+        return Property.Create(
+            request.Name,
+            request.Address.ToDomain(),
+            new Money(request.Price, Currency.FromCode(request.Currency)),
+            request.InternalCode,
+            request.Year,
+            ownerId,
+            request.Details.ToDomain(),
+            createdAt
+        );
+    }
+
+    internal static Dtos.SearchPropertiesResponse ToSearchResponse(
+        this (IEnumerable<Property> Properties, int TotalCount) searchResult,
+        int page,
+        int pageSize)
+    {
+        var totalPages = (int)Math.Ceiling((double)searchResult.TotalCount / pageSize);
+
+        return new Dtos.SearchPropertiesResponse(
+            searchResult.Properties.Select(p => p.ToDto()),
+            searchResult.TotalCount,
+            page,
+            pageSize,
+            totalPages
+        );
+    }
+
+    internal static Dtos.Address ToDto(this Address address)
+    {
+        return new Dtos.Address(
+            address.Street,
+            address.City,
+            address.State,
+            address.ZipCode,
+            address.Country
+        );
+    }
+
+    internal static Address ToDomain(this Dtos.Address address)
+    {
+        return new Address(
+            address.Country,
+            address.State,
+            address.City,
+            address.ZipCode,
+            address.Street
+        );
+    }
+
+    internal static Dtos.PropertyDetails ToDto(this Domain.Properties.ValueObjects.PropertyDetails details)
+    {
+        return new Dtos.PropertyDetails(
+            details.PropertyType.ToDto(),
+            details.Bedrooms,
+            details.Bathrooms,
+            details.AreaInSquareMeters,
+            details.Description
+        );
+    }
+
+    internal static Domain.Properties.ValueObjects.PropertyDetails ToDomain(this Dtos.PropertyDetails details)
+    {
+        return new Domain.Properties.ValueObjects.PropertyDetails(
+            details.PropertyType.ToDomain(),
+            details.Bedrooms,
+            details.Bathrooms,
+            details.AreaInSquareMeters,
+            details.Description
+        );
+    }
+
+
+    internal static DtoPropertyType ToDto(this DomainPropertyType value)
+        => (DtoPropertyType)(int)value;
+
+    internal static DomainPropertyType ToDomain(this DtoPropertyType value)
+    => Enum.IsDefined(typeof(DomainPropertyType), (int)value)
+        ? (DomainPropertyType)(int)value
+        : throw new ArgumentOutOfRangeException(nameof(value), $"Unknown PropertyType: {value}");
+}
