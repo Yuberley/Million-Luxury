@@ -34,7 +34,7 @@ public class AuthController(ISender sender) : ControllerBase
         var command = new RegisterUserCommand(request.Email, request.Password, request.Roles);
         var result = await _sender.Send(command, cancellationToken);
 
-        return result.IsSuccess ? Ok(result) : HandleError(result.Error);
+        return result.IsSuccess ? Ok(result.Value) : HandleError(result.Error);
     }
 
     [Authorize]

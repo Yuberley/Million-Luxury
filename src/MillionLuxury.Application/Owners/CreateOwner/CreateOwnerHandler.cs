@@ -27,13 +27,11 @@ internal sealed class CreateOwnerHandler : ICommandHandler<CreateOwnerCommand, G
 
     public async Task<Result<Guid>> Handle(CreateOwnerCommand request, CancellationToken cancellationToken)
     {
-        // Check if owner with same name already exists
         if (await ownerRepository.ExistsByNameAsync(request.Request.Name, cancellationToken))
         {
             return Result.Failure<Guid>(OwnerErrors.NameAlreadyExists(request.Request.Name));
         }
 
-        // Create new owner
         var owner = request.Request.ToDomain(dateTimeProvider.UtcNow);
 
         ownerRepository.Add(owner);

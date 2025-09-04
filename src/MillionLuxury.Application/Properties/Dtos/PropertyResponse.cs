@@ -1,9 +1,5 @@
 namespace MillionLuxury.Application.Properties.Dtos;
 
-#region Usings
-using MillionLuxury.Domain.Properties.ValueObjects;
-#endregion
-
 public record PropertyResponse(
     Guid Id,
     string Name,

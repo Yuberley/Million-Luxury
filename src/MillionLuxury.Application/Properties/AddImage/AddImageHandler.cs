@@ -4,6 +4,7 @@ namespace MillionLuxury.Application.Properties.AddImage;
 using MillionLuxury.Application.Common.Abstractions.Clock;
 using MillionLuxury.Application.Common.Abstractions.CQRS;
 using MillionLuxury.Application.Common.Abstractions.Storage;
+using MillionLuxury.Application.Common.Extensions;
 using MillionLuxury.Domain.Abstractions;
 using MillionLuxury.Domain.File;
 using MillionLuxury.Domain.Properties;
@@ -68,18 +69,16 @@ internal sealed class AddImageHandler : ICommandHandler<AddImageCommand, Guid>
             request.AddImage.Base64Content,
             imagePath,
             PropertyImagesBucket,
-            GetContentType(fileExtension)
+            fileExtension.GetContentType()
         );
 
-        await storageService.SaveFile(fileEntity);
-
-        var imageUrl = $"{PropertyImagesBucket}/{imagePath}/{uniqueFileName}";
+        var fullPathImage = await storageService.SaveFile(fileEntity);
 
         var image = PropertyImage.Create(
             imageId,
             property.Id,
             request.AddImage.FileName,
-            imageUrl,
+            fullPathImage,
             dateTimeProvider.UtcNow
         );
 
@@ -91,20 +90,4 @@ internal sealed class AddImageHandler : ICommandHandler<AddImageCommand, Guid>
 
         return Result.Success(image.Id);
     }
-
-    #region Private methods
-    private static string GetContentType(string fileExtension)
-    {
-        return fileExtension.ToLowerInvariant() switch
-        {
-            ".jpg" or ".jpeg" => "image/jpeg",
-            ".png" => "image/png",
-            ".gif" => "image/gif",
-            ".bmp" => "image/bmp",
-            ".webp" => "image/webp",
-            ".svg" => "image/svg+xml",
-            _ => "application/octet-stream"
-        };
-    }
-    #endregion
 }

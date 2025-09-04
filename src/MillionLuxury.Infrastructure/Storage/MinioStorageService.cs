@@ -14,22 +14,21 @@ public class MinioStorageService : IStorageService
     private readonly IMinioClient _minioClient;
     private readonly ILogger<MinioStorageService> _logger;
 
-    public MinioStorageService(IMinioClient minioClient, ILogger<MinioStorageService> logger )
+    public MinioStorageService(IMinioClient minioClient, ILogger<MinioStorageService> logger)
     {
         _minioClient = minioClient;
         _logger = logger;
     }
 
     /// <summary>
-    /// Obtiene el contenido de un archivo del bucket indicado.
-    /// Retorna el contenido en bytes.
+    /// Gets the contents of a file from the specified bucket.
+    /// Returns the content in bytes.
     /// </summary>
     public async Task<byte[]> GetFile(File file)
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
         if (string.IsNullOrWhiteSpace(file.NameBucket)) throw new ArgumentException("NameBucket es requerido.");
 
-        // Si no viene Filename (como tu GetFile factory), asumimos que Path ya es la clave completa
         var key = string.IsNullOrWhiteSpace(file.Filename)
             ? NormalizePath(file.Path)
             : BuildObjectKey(file.Path, file.Filename);
@@ -67,70 +66,11 @@ public class MinioStorageService : IStorageService
         }
     }
 
-    //public async Task<byte[]> GetFile(File file)
-    //{
-    //    try
-    //    {
-    //        string filename = file.Filename;
-    //        string objectName = file.Path;
-
-    //        // Confirm object exists before attemt to get
-    //        StatObjectArgs statObjectArgs = new StatObjectArgs()
-    //            .WithBucket(file.NameBucket)
-    //            .WithObject(objectName);
-
-    //        await _minioClient.
-    //          StatObjectAsync(statObjectArgs)
-    //          .ConfigureAwait(false);
-
-    //        var tcs = new TaskCompletionSource<byte[]>();
-
-    //        GetObjectArgs getObjectArgs = new GetObjectArgs()
-    //            .WithBucket(file.NameBucket)
-    //            .WithObject(objectName)
-    //            .WithCallbackStream((stream) =>
-    //            {
-    //                using (var ms = new MemoryStream())
-    //                {
-    //                    stream.CopyTo(ms);
-    //                    tcs.SetResult(ms.ToArray());
-    //                }
-    //            });
-
-    //        await _minioClient
-    //          .GetObjectAsync(getObjectArgs)
-    //          .ConfigureAwait(false);
-
-    //        return await tcs.Task.ConfigureAwait(false);
-
-    //    }
-    //    catch (InvalidBucketNameException ex)
-    //    {
-    //        throw new ArgumentException("Invalid bucket name", ex);
-    //    }
-    //    catch (ConnectionException ex)
-    //    {
-    //        throw new InvalidOperationException("Connection error", ex);
-    //    }
-    //    catch (InternalClientException ex)
-    //    {
-    //        throw new InvalidOperationException("Internal library error", ex);
-    //    }
-    //    catch (Minio.Exceptions.MinioException ex)
-    //    {
-    //        throw new KeyNotFoundException("File not found", ex);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new Exception("An error occurred", ex);
-    //    }
-    //}
-
     /// <summary>
-    /// Guarda un archivo en el bucket indicado.
-    /// Se asume que File.Content viene en Base64 y que Mimetype es el Content-Type.
+    /// Saves a file to the specified bucket.
+    /// It is assumed that File.Content is in Base64 and that Mimetype is the Content-Type.
     /// </summary>
-    public async Task SaveFile(File file)
+    public async Task<string> SaveFile(File file)
     {
         if (file is null) throw new ArgumentNullException(nameof(file));
         if (string.IsNullOrWhiteSpace(file.NameBucket)) throw new ArgumentException("NameBucket es requerido.");
@@ -145,17 +85,16 @@ public class MinioStorageService : IStorageService
         {
             await EnsureBucketExistsAsync(file.NameBucket);
 
-            // Si llega con encabezado data URL, córtalo: "data:...;base64,<payload>"
             var base64 = ExtractBase64Payload(file.Content);
             var bytes = Convert.FromBase64String(base64);
 
-            using var ms = new MemoryStream(bytes);
+            using var memoryStream = new MemoryStream(bytes);
 
             var putArgs = new PutObjectArgs()
                 .WithBucket(file.NameBucket)
                 .WithObject(key)
-                .WithStreamData(ms)
-                .WithObjectSize(ms.Length)
+                .WithStreamData(memoryStream)
+                .WithObjectSize(memoryStream.Length)
                 .WithContentType(string.IsNullOrWhiteSpace(file.Mimetype)
                     ? "application/octet-stream"
                     : file.Mimetype);
@@ -163,7 +102,9 @@ public class MinioStorageService : IStorageService
             await _minioClient.PutObjectAsync(putArgs);
 
             _logger.LogInformation("Objeto guardado en MinIO. Bucket: {Bucket}, Key: {Key}, Size: {Size} bytes",
-                file.NameBucket, key, ms.Length);
+                file.NameBucket, key, memoryStream.Length);
+
+            return $"{_minioClient.Config.Endpoint}/{file.NameBucket}/{key}";
         }
         catch (MinioException ex)
         {
@@ -177,66 +118,9 @@ public class MinioStorageService : IStorageService
         }
     }
 
-    //public async Task SaveFile(File file)
-    //{
-    //    string mimetype = "application/octet-stream";
-
-    //    try
-    //    {
-    //        //Create bucket if it doesn't exist.
-    //        var beArgs = new BucketExistsArgs().WithBucket(file.NameBucket);
-    //        bool found = await _minioClient.BucketExistsAsync(beArgs).ConfigureAwait(false);
-    //        if (!found)
-    //        {
-    //            var mbArgs = new MakeBucketArgs().WithBucket(file.NameBucket);
-    //            await _minioClient.MakeBucketAsync(mbArgs).ConfigureAwait(false);
-    //        }
-
-    //        string filename = file.Filename;
-    //        string objectName = file.Path;
-
-    //        byte[] contentBytes = Convert.FromBase64String(file.Content);
-    //        var memoryStringFile = new System.IO.MemoryStream(contentBytes);
-
-    //        // Upload a file to bucket.
-    //        var putObjectArgs = new PutObjectArgs()
-    //          .WithBucket(file.NameBucket)
-    //          .WithObject(objectName)
-    //          .WithContentType(mimetype)
-    //          .WithStreamData(memoryStringFile)
-    //          .WithObjectSize(memoryStringFile.Length);
-
-    //        var data = await _minioClient
-    //          .PutObjectAsync(putObjectArgs)
-    //          .ConfigureAwait(false);
-
-    //    }
-    //    catch (InvalidBucketNameException ex)
-    //    {
-    //        throw new ArgumentException("Invalid bucket name", ex);
-    //    }
-    //    catch (ConnectionException ex)
-    //    {
-    //        throw new InvalidOperationException("Connection error", ex);
-    //    }
-    //    catch (InternalClientException ex)
-    //    {
-    //        throw new InvalidOperationException("Internal library error", ex);
-    //    }
-    //    catch (Minio.Exceptions.MinioException ex)
-    //    {
-    //        throw new KeyNotFoundException("File not found", ex);
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        throw new Exception("An error occurred", ex);
-    //    }
-    //}
-
-
     /// <summary>
-    /// Elimina un archivo del bucket indicado.
-    /// Si no viene Filename (como en tu DeleteFile factory), se asume que Path es la clave completa.
+    /// Deletes a file from the specified bucket.
+    /// If Filename is not provided (as in your DeleteFile factory), Path is assumed to be the full key.
     /// </summary>
     public async Task DeleteFile(File file)
     {
@@ -244,7 +128,7 @@ public class MinioStorageService : IStorageService
         if (string.IsNullOrWhiteSpace(file.NameBucket)) throw new ArgumentException("NameBucket es requerido.");
 
         var key = string.IsNullOrWhiteSpace(file.Filename)
-            ? NormalizePath(file.Path) // tu factory DeleteFile sólo trae Path y Bucket
+            ? NormalizePath(file.Path)
             : BuildObjectKey(file.Path, file.Filename);
 
         try
@@ -289,14 +173,13 @@ public class MinioStorageService : IStorageService
     {
         if (string.IsNullOrWhiteSpace(path)) return string.Empty;
         var p = path.Replace("\\", "/").Trim();
-        p = p.TrimStart('/'); // no queremos leading slash en la key
-        p = p.TrimEnd('/');   // ni trailing slash
+        p = p.TrimStart('/');
+        p = p.TrimEnd('/');
         return p;
     }
 
     private static string ExtractBase64Payload(string content)
     {
-        // Permite soportar formatos con encabezado data URL
         var idx = content.IndexOf("base64,", StringComparison.OrdinalIgnoreCase);
         return idx >= 0 ? content[(idx + "base64,".Length)..] : content;
     }
@@ -312,6 +195,9 @@ public class MinioStorageService : IStorageService
             {
                 await _minioClient.MakeBucketAsync(
                     new MakeBucketArgs().WithBucket(bucket));
+
+                await EnsureBucketPublicReadAsync(bucket);
+
                 _logger.LogInformation("Bucket creado en MinIO: {Bucket}", bucket);
             }
         }
@@ -320,6 +206,34 @@ public class MinioStorageService : IStorageService
             _logger.LogError(ex, "Error verificando/creando bucket {Bucket}", bucket);
             throw;
         }
+    }
+
+    private async Task EnsureBucketPublicReadAsync(string bucket, string? prefix = null)
+    {
+        var resource = string.IsNullOrWhiteSpace(prefix)
+            ? $"arn:aws:s3:::{bucket}/*"
+            : $"arn:aws:s3:::{bucket}/{NormalizePath(prefix)}/*";
+
+        var policyJson = $$"""
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "AllowAnonymousRead",
+                  "Effect": "Allow",
+                  "Principal": "*",
+                  "Action": ["s3:GetObject"],
+                  "Resource": ["{{resource}}"]
+                }
+              ]
+            }
+            """;
+
+        await _minioClient.SetPolicyAsync(
+            new SetPolicyArgs()
+                .WithBucket(bucket)
+                .WithPolicy(policyJson)
+        );
     }
     #endregion
 }

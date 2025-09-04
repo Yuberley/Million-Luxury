@@ -45,14 +45,10 @@ internal sealed class RemoveImageHandler : ICommandHandler<RemoveImageCommand>
             return Result.Failure(PropertyErrors.ImageNotFound);
         }
 
-        // Remove image from MinIO storage
         var fileEntity = File.CreateForDelete(image.FilePath, PropertyImagesBucket);
         await storageService.DeleteFile(fileEntity);
 
-        // Remove image from property
         property.RemoveImage(request.ImageId);
-
-        propertyRepository.Update(property);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

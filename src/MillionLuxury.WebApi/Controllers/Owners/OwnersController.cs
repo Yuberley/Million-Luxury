@@ -6,9 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MillionLuxury.Application.Owners.CreateOwner;
-using MillionLuxury.Application.Owners.DeleteOwner;
 using MillionLuxury.Application.Owners.Dtos;
 using MillionLuxury.Application.Owners.GetAllOwners;
+using MillionLuxury.Application.Owners.UpdateOwnerPhoto;
 #endregion
 
 [Authorize]
@@ -49,6 +49,30 @@ public class OwnersController : ControllerBase
     }
 
     /// <summary>
+    /// Adds an image to a owner
+    /// </summary>
+    /// <param name="id">Owner ID</param>
+    /// <param name="request">Image data</param>
+    /// <param name="cancellationToken">Cancellation token</param>
+    /// <returns>The ID of the created image</returns>
+    [HttpPost("{id:guid}/photo")]
+    public async Task<IActionResult> AddPhotoToOwner(
+        Guid id,
+        [FromBody] UpdateOwnerPhotoRequest request,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateOwnerPhotoCommand(id, request);
+        var result = await sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return BadRequest(result.Error);
+        }
+
+        return Created();
+    }
+
+    /// <summary>
     /// Gets all owners
     /// </summary>
     /// <param name="cancellationToken">Cancellation token</param>
@@ -65,27 +89,5 @@ public class OwnersController : ControllerBase
         }
 
         return Ok(result.Value);
-    }
-
-    /// <summary>
-    /// Deletes an owner by ID
-    /// </summary>
-    /// <param name="id">Owner ID</param>
-    /// <param name="cancellationToken">Cancellation token</param>
-    /// <returns>Success or failure result</returns>
-    [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteOwner(
-        Guid id,
-        CancellationToken cancellationToken)
-    {
-        var command = new DeleteOwnerCommand(id);
-        var result = await sender.Send(command, cancellationToken);
-
-        if (result.IsFailure)
-        {
-            return BadRequest(result.Error);
-        }
-
-        return NoContent();
     }
 }

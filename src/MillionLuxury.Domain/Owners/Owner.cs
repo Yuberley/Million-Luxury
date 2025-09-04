@@ -3,7 +3,6 @@ namespace MillionLuxury.Domain.Owners;
 #region Usings
 using MillionLuxury.Domain.Abstractions;
 using MillionLuxury.Domain.Owners.Events;
-using MillionLuxury.Domain.Properties.ValueObjects;
 using MillionLuxury.Domain.SharedValueObjects;
 #endregion
 
@@ -12,12 +11,6 @@ using MillionLuxury.Domain.SharedValueObjects;
 /// </summary>
 public sealed class Owner : Entity
 {
-    #region Constants
-    private const int MAX_NAME_LENGTH = 200;
-    private const int MAX_ADDRESS_LENGTH = 500;
-    private const int MAX_PHOTO_PATH_LENGTH = 1000;
-    #endregion
-
     private Owner(
         Guid ownerId,
         string name,

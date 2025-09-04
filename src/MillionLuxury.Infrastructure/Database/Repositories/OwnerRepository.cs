@@ -19,7 +19,6 @@ internal sealed class OwnerRepository : Repository<Owner>, IOwnerRepository
     public async Task<Owner?> GetByIdWithPropertiesAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Set<Owner>()
-            .Include("Properties")
             .FirstOrDefaultAsync(o => o.Id == id, cancellationToken);
     }
 
