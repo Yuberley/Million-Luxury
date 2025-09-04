@@ -3,7 +3,9 @@ namespace MillionLuxury.Application.Properties;
 #region Usings
 using MillionLuxury.Domain.Properties;
 using MillionLuxury.Domain.SharedValueObjects;
+using DomainPropertyStatus = Domain.Properties.ValueObjects.PropertyStatus;
 using DomainPropertyType = Domain.Properties.ValueObjects.PropertyType;
+using DtoPropertyStatus = Dtos.PropertyStatus;
 using DtoPropertyType = Dtos.PropertyType;
 #endregion
 
@@ -14,13 +16,13 @@ internal static class PropertyExtensions
         return new Dtos.PropertyResponse(
             property.Id,
             property.Name,
-            property.Address.ToDto(),
+            Address: $"{property.Address.Street}, {property.Address.City}, {property.Address.State}, {property.Address.Country}",
             property.Price.Amount,
             property.Price.Currency.Code,
             property.InternalCode,
             property.Year,
             property.OwnerId,
-            property.Status,
+            property.Status.ToDto(),
             property.Details.ToDto(),
             property.CreatedAt,
             property.UpdatedAt,
@@ -39,7 +41,7 @@ internal static class PropertyExtensions
         );
     }
 
-    internal static Property ToDomain(this Dtos.CreatePropertyRequest request, Guid ownerId, DateTime createdAt)
+    internal static Property ToDomain(this Dtos.CreatePropertyRequest request, DateTime createdAt)
     {
         return Property.Create(
             request.Name,
@@ -47,7 +49,7 @@ internal static class PropertyExtensions
             new Money(request.Price, Currency.FromCode(request.Currency)),
             request.InternalCode,
             request.Year,
-            ownerId,
+            request.OwnerId,
             request.Details.ToDomain(),
             createdAt
         );
@@ -113,7 +115,6 @@ internal static class PropertyExtensions
         );
     }
 
-
     internal static DtoPropertyType ToDto(this DomainPropertyType value)
         => (DtoPropertyType)(int)value;
 
@@ -121,4 +122,31 @@ internal static class PropertyExtensions
     => Enum.IsDefined(typeof(DomainPropertyType), (int)value)
         ? (DomainPropertyType)(int)value
         : throw new ArgumentOutOfRangeException(nameof(value), $"Unknown PropertyType: {value}");
+
+    internal static DtoPropertyStatus ToDto(this DomainPropertyStatus value)
+            => (DtoPropertyStatus)(int)value;
+
+    internal static DomainPropertyStatus ToDomain(this DtoPropertyStatus value)
+        => Enum.IsDefined(typeof(DomainPropertyStatus), (int)value)
+            ? (DomainPropertyStatus)(int)value
+            : throw new ArgumentOutOfRangeException(nameof(value), $"Unknown PropertyStatus: {value}");
+
+    internal static bool IsValidImageFormat(this byte[] imageBytes)
+    {
+        // Check for common image file signatures
+        if (imageBytes.Length < 4) return false;
+
+        // JPEG
+        if (imageBytes[0] == 0xFF && imageBytes[1] == 0xD8) return true;
+
+        // PNG
+        if (imageBytes[0] == 0x89 && imageBytes[1] == 0x50 && imageBytes[2] == 0x4E && imageBytes[3] == 0x47) return true;
+
+        // WebP
+        if (imageBytes.Length >= 12 &&
+            imageBytes[0] == 0x52 && imageBytes[1] == 0x49 && imageBytes[2] == 0x46 && imageBytes[3] == 0x46 &&
+            imageBytes[8] == 0x57 && imageBytes[9] == 0x45 && imageBytes[10] == 0x42 && imageBytes[11] == 0x50) return true;
+
+        return false;
+    }
 }

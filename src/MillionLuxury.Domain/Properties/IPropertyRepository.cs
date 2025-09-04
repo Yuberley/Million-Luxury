@@ -15,6 +15,6 @@ public interface IPropertyRepository : IRepository<Property>
         int pageSize,
         decimal? minPrice = null,
         decimal? maxPrice = null,
-        PropertyStatus? status = null,
+        PropertyType? type = null,
         CancellationToken cancellationToken = default);
 }

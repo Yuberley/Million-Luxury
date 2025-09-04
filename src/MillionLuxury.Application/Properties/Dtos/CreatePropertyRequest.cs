@@ -1,10 +1,7 @@
 namespace MillionLuxury.Application.Properties.Dtos;
 
-#region Usings
-using MillionLuxury.Domain.Properties.ValueObjects;
-#endregion
-
 public record CreatePropertyRequest(
+    Guid OwnerId,
     string Name,
     Address Address,
     decimal Price,

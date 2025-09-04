@@ -1,6 +1,5 @@
 namespace MillionLuxury.Application.Properties.ChangePrice;
 
-
 #region Usings
 using MillionLuxury.Application.Common.Abstractions.Clock;
 using MillionLuxury.Application.Common.Abstractions.CQRS;
@@ -36,11 +35,8 @@ internal sealed class ChangePriceHandler : ICommandHandler<ChangePriceCommand>
             return Result.Failure(PropertyErrors.NotFound);
         }
 
-        var newPrice = new Money(request.Request.Price, Currency.FromCode(request.Request.Currency));
-
+        var newPrice = new Money(request.ChangePrice.Price, Currency.FromCode(request.ChangePrice.Currency));
         property.ChangePrice(newPrice, dateTimeProvider.UtcNow);
-
-        propertyRepository.Update(property);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

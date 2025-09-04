@@ -2,7 +2,6 @@ namespace MillionLuxury.Domain.Properties;
 
 #region Usings
 using MillionLuxury.Domain.Abstractions;
-using MillionLuxury.Domain.Owners;
 using MillionLuxury.Domain.Properties.Events;
 using MillionLuxury.Domain.Properties.ValueObjects;
 using MillionLuxury.Domain.PropertyTraces;
@@ -14,13 +13,6 @@ using MillionLuxury.Domain.SharedValueObjects;
 /// </summary>
 public sealed class Property : Entity
 {
-    #region Constants
-    private const int MAX_NAME_LENGTH = 200;
-    private const int MAX_DESCRIPTION_LENGTH = 2000;
-    private const int MAX_ADDRESS_LENGTH = 500;
-    private const int MAX_INTERNAL_CODE_LENGTH = 50;
-    #endregion
-
     #region Private Members
     private readonly List<PropertyImage> _images = [];
     private readonly List<PropertyTrace> _traces = [];
@@ -109,17 +101,21 @@ public sealed class Property : Entity
     }
 
     public void UpdateProperty(
+        Guid ownerId,
         string name,
         Address address,
         int year,
+        Money price,
         PropertyStatus status,
         PropertyDetails details,
         DateTime updatedAt
     )
     {
+        OwnerId = ownerId;
         Name = name;
         Address = address;
         Year = year;
+        Price = price;
         Status = status;
         Details = details;
         UpdatedAt = updatedAt;

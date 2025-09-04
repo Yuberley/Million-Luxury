@@ -29,7 +29,6 @@ public class CreatePropertyHandlerTests
 
         handler = new CreatePropertyHandler(
             mockPropertyRepository.Object,
-            mockUserContext.Object,
             mockDateTimeProvider.Object,
             mockUnitOfWork.Object
         );
@@ -47,7 +46,7 @@ public class CreatePropertyHandlerTests
         );
 
         var details = new MillionLuxury.Application.Properties.Dtos.PropertyDetails(
-            PropertyType.House,
+            MillionLuxury.Application.Properties.Dtos.PropertyType.House,
             Bedrooms: 3,
             Bathrooms: 2,
             AreaInSquareMeters: 150m,
@@ -58,6 +57,7 @@ public class CreatePropertyHandlerTests
         var userId = Guid.NewGuid();
         var currentTime = DateTime.UtcNow;
         var request = new CreatePropertyRequest(
+            OwnerId: userId,
             Name: "Test Property",
             Address: address,
             Price: 100000m,
@@ -99,7 +99,7 @@ public class CreatePropertyHandlerTests
         );
 
         var details = new MillionLuxury.Application.Properties.Dtos.PropertyDetails(
-            PropertyType.House,
+            MillionLuxury.Application.Properties.Dtos.PropertyType.House,
             Bedrooms: 3,
             Bathrooms: 2,
             AreaInSquareMeters: 150m,
@@ -108,6 +108,7 @@ public class CreatePropertyHandlerTests
 
         // Arrange
         var request = new CreatePropertyRequest(
+            OwnerId: Guid.NewGuid(),
             Name: "Test Property",
             Address: address,
             Price: 100000m,

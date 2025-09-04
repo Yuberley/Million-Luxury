@@ -6,6 +6,7 @@ using MillionLuxury.Application.Common.Abstractions.CQRS;
 using MillionLuxury.Domain.Abstractions;
 using MillionLuxury.Domain.Properties;
 using MillionLuxury.Domain.Properties.ValueObjects;
+using MillionLuxury.Domain.SharedValueObjects;
 #endregion
 
 internal sealed class UpdatePropertyHandler : ICommandHandler<UpdatePropertyCommand>
@@ -36,11 +37,13 @@ internal sealed class UpdatePropertyHandler : ICommandHandler<UpdatePropertyComm
         }
 
         property.UpdateProperty(
-            request.Request.Name,
-            request.Request.Address.ToDomain(),
-            request.Request.Year,
-            (PropertyStatus)request.Request.Status,
-            request.Request.Details.ToDomain(),
+            request.Property.OwnerId,
+            request.Property.Name,
+            request.Property.Address.ToDomain(),
+            request.Property.Year,
+            new Money(request.Property.Price, Currency.FromCode(request.Property.Currency)),
+            (PropertyStatus)request.Property.Status,
+            request.Property.Details.ToDomain(),
             dateTimeProvider.UtcNow
         );
 

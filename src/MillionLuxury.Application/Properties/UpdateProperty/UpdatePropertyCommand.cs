@@ -5,14 +5,4 @@ using MillionLuxury.Application.Common.Abstractions.CQRS;
 using MillionLuxury.Application.Properties.Dtos;
 #endregion
 
-public class UpdatePropertyCommand : ICommand
-{
-    public Guid PropertyId { get; }
-    public UpdatePropertyRequest Request { get; }
-
-    public UpdatePropertyCommand(Guid propertyId, UpdatePropertyRequest request)
-    {
-        PropertyId = propertyId;
-        Request = request;
-    }
-}
+public record UpdatePropertyCommand(Guid PropertyId, UpdatePropertyRequest Property) : ICommand;

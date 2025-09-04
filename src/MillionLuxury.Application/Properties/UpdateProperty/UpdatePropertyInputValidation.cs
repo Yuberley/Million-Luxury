@@ -23,38 +23,43 @@ public class UpdatePropertyInputValidation : AbstractValidator<UpdatePropertyCom
         RuleFor(x => x.PropertyId)
             .NotEmpty();
 
-        RuleFor(x => x.Request.Name)
+        RuleFor(x => x.Property.OwnerId)
+            .NotEmpty()
+            .GetType()
+            .Equals(typeof(Guid));
+
+        RuleFor(x => x.Property.Name)
             .NotEmpty()
             .MaximumLength(MaxNameLength);
 
-        RuleFor(x => x.Request.Address.Country).NotEmpty().MaximumLength(MaxAddressLength);
-        RuleFor(x => x.Request.Address.State).NotEmpty().MaximumLength(MaxAddressLength);
-        RuleFor(x => x.Request.Address.City).NotEmpty().MaximumLength(MaxAddressLength);
-        RuleFor(x => x.Request.Address.ZipCode).NotEmpty().MaximumLength(MaxAddressLength);
-        RuleFor(x => x.Request.Address.Street).NotEmpty().MaximumLength(MaxAddressLength);
+        RuleFor(x => x.Property.Address.Country).NotEmpty().MaximumLength(MaxAddressLength);
+        RuleFor(x => x.Property.Address.State).NotEmpty().MaximumLength(MaxAddressLength);
+        RuleFor(x => x.Property.Address.City).NotEmpty().MaximumLength(MaxAddressLength);
+        RuleFor(x => x.Property.Address.ZipCode).NotEmpty().MaximumLength(MaxAddressLength);
+        RuleFor(x => x.Property.Address.Street).NotEmpty().MaximumLength(MaxAddressLength);
 
-        RuleFor(x => x.Request.Year)
+        RuleFor(x => x.Property.Year)
             .GreaterThanOrEqualTo(MinYear)
             .LessThanOrEqualTo(MaxYear);
 
-        RuleFor(x => x.Request.Status)
+        RuleFor(x => x.Property.Status.ToString())
             .Must(BeValidPropertyStatus)
             .WithMessage("Invalid property status");
 
-        RuleFor(x => x.Request.Details.PropertyType.ToString())
+        RuleFor(x => x.Property.Details.PropertyType.ToString())
             .Must(BeValidPropertyType)
             .WithMessage("Invalid property type");
 
-        RuleFor(x => x.Request.Details.Bedrooms)
+        RuleFor(x => x.Property.Details.Bedrooms)
             .GreaterThanOrEqualTo(MinBedrooms);
 
-        RuleFor(x => x.Request.Details.Bathrooms)
+        RuleFor(x => x.Property.Details.Bathrooms)
             .GreaterThanOrEqualTo(MinBathrooms);
 
-        RuleFor(x => x.Request.Details.AreaInSquareMeters)
+        RuleFor(x => x.Property.Details.AreaInSquareMeters)
             .GreaterThanOrEqualTo(MinArea);
 
-        RuleFor(x => x.Request.Details.Description)
+        RuleFor(x => x.Property.Details.Description)
             .NotEmpty()
             .MaximumLength(MaxDescriptionLength);
     }
@@ -64,7 +69,7 @@ public class UpdatePropertyInputValidation : AbstractValidator<UpdatePropertyCom
         return Enum.IsDefined(typeof(PropertyType), propertyType);
     }
 
-    private static bool BeValidPropertyStatus(int status)
+    private static bool BeValidPropertyStatus(string status)
     {
         return Enum.IsDefined(typeof(PropertyStatus), status);
     }

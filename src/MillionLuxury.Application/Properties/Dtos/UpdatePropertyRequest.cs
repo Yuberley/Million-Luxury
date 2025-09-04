@@ -1,13 +1,12 @@
 namespace MillionLuxury.Application.Properties.Dtos;
 
-#region Usings
-using MillionLuxury.Domain.Properties.ValueObjects;
-#endregion
-
 public record UpdatePropertyRequest(
+    Guid OwnerId,
     string Name,
     Address Address,
+    decimal Price,
+    string Currency,
     int Year,
-    int Status,
+    Dtos.PropertyStatus Status,
     PropertyDetails Details
 );

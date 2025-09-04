@@ -7,7 +7,7 @@ using MillionLuxury.Domain.Properties.ValueObjects;
 public record PropertyResponse(
     Guid Id,
     string Name,
-    Address Address,
+    string Address,
     decimal Price,
     string Currency,
     string InternalCode,

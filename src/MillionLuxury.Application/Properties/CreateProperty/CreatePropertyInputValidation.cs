@@ -40,8 +40,7 @@ public class CreatePropertyInputValidation : AbstractValidator<CreatePropertyCom
             .MaximumLength(MaxInternalCodeLength);
 
         RuleFor(x => x.Request.Year)
-            .GreaterThanOrEqualTo(MinYear)
-            .LessThanOrEqualTo(MaxYear);
+            .ExclusiveBetween(MinYear, MaxYear);
 
         RuleFor(x => x.Request.Details.PropertyType.ToString())
             .Must(BeValidPropertyType)

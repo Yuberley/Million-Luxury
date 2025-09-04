@@ -34,6 +34,7 @@ public sealed class PropertyImage : Entity
     public DateTime CreatedAt { get; private set; }
 
     public static PropertyImage Create(
+        Guid imageId,
         Guid propertyId,
         string fileName,
         string filePath,
@@ -41,7 +42,7 @@ public sealed class PropertyImage : Entity
     )
     {
         return new PropertyImage(
-            Guid.NewGuid(),
+            imageId,
             propertyId,
             fileName,
             filePath,

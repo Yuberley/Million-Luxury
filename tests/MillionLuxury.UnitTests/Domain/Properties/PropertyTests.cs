@@ -107,6 +107,7 @@ public class PropertyTests
     public void UpdateProperty_Should_Update_All_Fields_And_UpdatedAt()
     {
         // Arrange
+        var ownerId = Guid.NewGuid();
         var property = CreateTestProperty();
         var newName = "Updated Villa";
         var newYear = 2021;
@@ -134,11 +135,15 @@ public class PropertyTests
             newDescription
         );
 
+        var newPrice = new Money(750000m, Currency.FromCode("USD"));
+
         // Act
         property.UpdateProperty(
+            ownerId,
             newName,
             newAddress,
             newYear,
+            newPrice,
             newStatus,
             newDetails,
             updatedAt
@@ -162,7 +167,9 @@ public class PropertyTests
     {
         // Arrange
         var property = CreateTestProperty();
+        var imageId = Guid.NewGuid();
         var image = PropertyImage.Create(
+            imageId,
             property.Id,
             "test.jpg",
             "/images/test.jpg",
@@ -181,8 +188,10 @@ public class PropertyTests
     public void RemoveImage_Should_Remove_Image_From_Property()
     {
         // Arrange
+        var imageId = Guid.NewGuid();
         var property = CreateTestProperty();
         var image = PropertyImage.Create(
+            imageId,
             property.Id,
             "test.jpg",
             "/images/test.jpg",

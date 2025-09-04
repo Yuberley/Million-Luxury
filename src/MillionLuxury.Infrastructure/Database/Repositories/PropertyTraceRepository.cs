@@ -8,7 +8,10 @@ using MillionLuxury.Infrastructure.Repositories;
 
 internal sealed class PropertyTraceRepository : Repository<PropertyTrace>, IPropertyTraceRepository
 {
-    public PropertyTraceRepository(ApplicationDbContext dbContext) : base(dbContext) { }
+    public PropertyTraceRepository(ApplicationDbContext dbContext) : base(dbContext)
+    {
+
+    }
 
     public async Task<IEnumerable<PropertyTrace>> GetByPropertyIdAsync(Guid propertyId, CancellationToken cancellationToken = default)
     {
@@ -52,21 +55,5 @@ internal sealed class PropertyTraceRepository : Repository<PropertyTrace>, IProp
             .ToListAsync(cancellationToken);
 
         return (traces, totalCount);
-    }
-
-    public async Task<IEnumerable<PropertyTrace>> GetByDateRangeAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Set<PropertyTrace>()
-            .Where(pt => pt.DateSale >= startDate && pt.DateSale <= endDate)
-            .OrderByDescending(pt => pt.DateSale)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<PropertyTrace?> GetLatestByPropertyIdAsync(Guid propertyId, CancellationToken cancellationToken = default)
-    {
-        return await _dbContext.Set<PropertyTrace>()
-            .Where(pt => pt.PropertyId == propertyId)
-            .OrderByDescending(pt => pt.DateSale)
-            .FirstOrDefaultAsync(cancellationToken);
     }
 }

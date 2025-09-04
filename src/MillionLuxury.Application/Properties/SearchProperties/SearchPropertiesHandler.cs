@@ -2,10 +2,10 @@ namespace MillionLuxury.Application.Properties.SearchProperties;
 
 #region Usings
 using MillionLuxury.Application.Common.Abstractions.CQRS;
+using MillionLuxury.Application.Properties;
 using MillionLuxury.Application.Properties.Dtos;
 using MillionLuxury.Domain.Abstractions;
 using MillionLuxury.Domain.Properties;
-using MillionLuxury.Domain.Properties.ValueObjects;
 #endregion
 
 internal sealed class SearchPropertiesHandler : IQueryHandler<SearchPropertiesQuery, SearchPropertiesResponse>
@@ -26,7 +26,9 @@ internal sealed class SearchPropertiesHandler : IQueryHandler<SearchPropertiesQu
             request.Request.PageSize,
             request.Request.MinPrice,
             request.Request.MaxPrice,
-            request.Request.Status.HasValue ? (PropertyStatus)request.Request.Status.Value : null,
+            request.Request.PropertyType.HasValue
+                ? request.Request.PropertyType.Value.ToDomain()
+                : null,
             cancellationToken
         );
 

@@ -16,13 +16,13 @@ public class AddImageInputValidation : AbstractValidator<AddImageCommand>
         RuleFor(x => x.PropertyId)
             .NotEmpty();
 
-        RuleFor(x => x.Request.FileName)
+        RuleFor(x => x.AddImage.FileName)
             .NotEmpty()
             .MaximumLength(MaxFileNameLength)
             .Must(HaveValidImageExtension)
             .WithMessage("File must have a valid image extension (.jpg, .jpeg, .png, .webp)");
 
-        RuleFor(x => x.Request.Base64Content)
+        RuleFor(x => x.AddImage.Base64Content)
             .NotEmpty()
             .MaximumLength(MaxBase64ContentLength)
             .Must(BeValidBase64)

@@ -59,6 +59,7 @@ public static class DependencyInjection
         services.AddScoped<IPropertyRepository, PropertyRepository>();
         services.AddScoped<IOwnerRepository, OwnerRepository>();
         services.AddScoped<IPropertyTraceRepository, PropertyTraceRepository>();
+        services.AddScoped<IPropertyImagesRepository, PropertyImagesRepository>();
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<ApplicationDbContext>());
 

@@ -17,7 +17,7 @@ internal sealed class PropertyRepository : Repository<Property>, IPropertyReposi
     public async Task<Property?> GetByIdWithImagesAsync(Guid id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.Set<Property>()
-            .Include("_images")
+            .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.Id == id, cancellationToken);
     }
 
@@ -38,20 +38,14 @@ internal sealed class PropertyRepository : Repository<Property>, IPropertyReposi
         int pageSize,
         decimal? minPrice = null,
         decimal? maxPrice = null,
-        PropertyStatus? status = null,
+        PropertyType? type = null,
         CancellationToken cancellationToken = default)
     {
         var query = _dbContext.Set<Property>().AsQueryable();
 
-        // Apply filters
-        if (minPrice.HasValue)
-            query = query.Where(p => p.Price.Amount >= minPrice.Value);
-
-        if (maxPrice.HasValue)
-            query = query.Where(p => p.Price.Amount <= maxPrice.Value);
-
-        if (status.HasValue)
-            query = query.Where(p => p.Status == status.Value);
+        if (minPrice.HasValue) query = query.Where(p => p.Price.Amount >= minPrice.Value);
+        if (maxPrice.HasValue) query = query.Where(p => p.Price.Amount <= maxPrice.Value);
+        if (type.HasValue) query = query.Where(p => p.Details.PropertyType == type.Value);
 
         var totalCount = await query.CountAsync(cancellationToken);
 
@@ -59,7 +53,7 @@ internal sealed class PropertyRepository : Repository<Property>, IPropertyReposi
             .OrderByDescending(p => p.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Include("_images")
+            .Include(p => p.Images)
             .ToListAsync(cancellationToken);
 
         return (properties, totalCount);

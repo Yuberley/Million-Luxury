@@ -7,7 +7,6 @@ using MillionLuxury.Application.Properties.ChangePrice;
 using MillionLuxury.Application.Properties.Dtos;
 using MillionLuxury.Domain.Abstractions;
 using MillionLuxury.Domain.Properties;
-using MillionLuxury.Domain.Properties.ValueObjects;
 using MillionLuxury.Domain.SharedValueObjects;
 using Moq;
 #endregion
@@ -96,7 +95,7 @@ public class ChangePriceHandlerTests
         );
 
         var details = new MillionLuxury.Domain.Properties.ValueObjects.PropertyDetails(
-            PropertyType.House,
+            MillionLuxury.Domain.Properties.ValueObjects.PropertyType.House,
             3,
             2,
             150m,

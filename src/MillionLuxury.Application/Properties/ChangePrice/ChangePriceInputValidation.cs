@@ -15,7 +15,7 @@ public class ChangePriceInputValidation : AbstractValidator<ChangePriceCommand>
         RuleFor(x => x.PropertyId)
             .NotEmpty();
 
-        RuleFor(x => x.Request.Price)
+        RuleFor(x => x.ChangePrice.Price)
             .GreaterThanOrEqualTo(MinPrice);
     }
 }
