@@ -77,8 +77,8 @@ dotnet test tests/MillionLuxury.UnitTests/
 
 1. **Clonar el repositorio**
 ```bash
-git clone https://github.com/yuberley/MillionLuxury.git
-cd MillionLuxury
+git clone https://github.com/Yuberley/Million-Luxury.git
+cd Million-Luxury
 ```
 
 2. **Configurar Base de Datos**
@@ -93,12 +93,19 @@ dotnet ef database update --project src/MillionLuxury.Infrastructure --startup-p
 
 3. **Ejecutar la Aplicación**
 ```bash
-dotnet run --project src/MillionLuxury.WebApi
+dotnet run --project src/MillionLuxury.WebApi 
 ```
 
 4. **Acceder a la API**
 - API: `https://localhost:44385`
 - Swagger: `https://localhost:44385/swagger`
+
+---
+
+## Credenciales
+
+- Credenciales de [SQL server ↗️](https://github.com/Yuberley/Million-Luxury/blob/master/infrastructure/sqlserver.env)
+- Credenciales de [Minio ↗️](https://github.com/Yuberley/Million-Luxury/blob/master/infrastructure/minio.env)
 
 ---
 
