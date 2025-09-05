@@ -83,7 +83,7 @@ cd MillionLuxury
 
 2. **Configurar Base de Datos**
 ```bash
-# Opcional: Iniciar SQL Server con Docker
+# Opcional: Iniciar SQL Server y Minio con Docker
 cd infrastructure
 docker-compose up -d
 
@@ -97,8 +97,8 @@ dotnet run --project src/MillionLuxury.WebApi
 ```
 
 4. **Acceder a la API**
-- API: `https://localhost:7000`
-- Swagger: `https://localhost:7000/swagger`
+- API: `https://localhost:44385`
+- Swagger: `https://localhost:44385/swagger`
 
 ---
 
