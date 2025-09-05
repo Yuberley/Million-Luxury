@@ -2,6 +2,7 @@ namespace MillionLuxury.Application.Properties.ChangePrice;
 
 #region Usings
 using FluentValidation;
+using MillionLuxury.Domain.Properties;
 #endregion
 
 public class ChangePriceInputValidation : AbstractValidator<ChangePriceCommand>
@@ -16,6 +17,7 @@ public class ChangePriceInputValidation : AbstractValidator<ChangePriceCommand>
             .NotEmpty();
 
         RuleFor(x => x.ChangePrice.Price)
-            .GreaterThanOrEqualTo(MinPrice);
+            .GreaterThanOrEqualTo(MinPrice)
+            .WithMessage(PropertyErrors.InvalidPrice.Name);
     }
 }

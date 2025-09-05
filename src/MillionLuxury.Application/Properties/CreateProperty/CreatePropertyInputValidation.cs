@@ -2,6 +2,7 @@ namespace MillionLuxury.Application.Properties.CreateProperty;
 
 #region Usings
 using FluentValidation;
+using MillionLuxury.Domain.Properties;
 using MillionLuxury.Domain.Properties.ValueObjects;
 #endregion
 
@@ -33,27 +34,32 @@ public class CreatePropertyInputValidation : AbstractValidator<CreatePropertyCom
         RuleFor(c => c.Request.Address.Street).NotEmpty().MaximumLength(MaxAddressLength);
 
         RuleFor(x => x.Request.Price)
-            .GreaterThanOrEqualTo(MinPrice);
+            .GreaterThanOrEqualTo(MinPrice)
+            .WithMessage(PropertyErrors.InvalidPrice.Name);
 
         RuleFor(x => x.Request.InternalCode)
             .NotEmpty()
             .MaximumLength(MaxInternalCodeLength);
 
         RuleFor(x => x.Request.Year)
-            .ExclusiveBetween(MinYear, MaxYear);
+            .ExclusiveBetween(MinYear, MaxYear)
+            .WithMessage(PropertyErrors.InvalidYear.Name);
 
         RuleFor(x => x.Request.Details.PropertyType.ToString())
             .Must(BeValidPropertyType)
             .WithMessage("Invalid property type");
 
         RuleFor(x => x.Request.Details.Bedrooms)
-            .GreaterThanOrEqualTo(MinBedrooms);
+            .GreaterThanOrEqualTo(MinBedrooms)
+            .WithMessage(PropertyErrors.InvalidBedrooms.Name);
 
         RuleFor(x => x.Request.Details.Bathrooms)
-            .GreaterThanOrEqualTo(MinBathrooms);
+            .GreaterThanOrEqualTo(MinBathrooms)
+            .WithMessage(PropertyErrors.InvalidBathrooms.Name);
 
         RuleFor(x => x.Request.Details.AreaInSquareMeters)
-            .GreaterThanOrEqualTo(MinArea);
+            .GreaterThanOrEqualTo(MinArea)
+            .WithMessage(PropertyErrors.InvalidArea.Name);
 
         RuleFor(x => x.Request.Details.Description)
             .NotEmpty()

@@ -2,6 +2,7 @@ namespace MillionLuxury.Application.Properties.UpdateProperty;
 
 #region Usings
 using FluentValidation;
+using MillionLuxury.Domain.Properties;
 using MillionLuxury.Domain.Properties.ValueObjects;
 #endregion
 
@@ -40,7 +41,8 @@ public class UpdatePropertyInputValidation : AbstractValidator<UpdatePropertyCom
 
         RuleFor(x => x.Property.Year)
             .GreaterThanOrEqualTo(MinYear)
-            .LessThanOrEqualTo(MaxYear);
+            .LessThanOrEqualTo(MaxYear)
+            .WithMessage(PropertyErrors.InvalidYear.Name);
 
         RuleFor(x => x.Property.Status.ToString())
             .Must(BeValidPropertyStatus)
@@ -51,13 +53,16 @@ public class UpdatePropertyInputValidation : AbstractValidator<UpdatePropertyCom
             .WithMessage("Invalid property type");
 
         RuleFor(x => x.Property.Details.Bedrooms)
-            .GreaterThanOrEqualTo(MinBedrooms);
+            .GreaterThanOrEqualTo(MinBedrooms)
+            .WithMessage(PropertyErrors.InvalidBedrooms.Name);
 
         RuleFor(x => x.Property.Details.Bathrooms)
-            .GreaterThanOrEqualTo(MinBathrooms);
+            .GreaterThanOrEqualTo(MinBathrooms)
+            .WithMessage(PropertyErrors.InvalidBathrooms.Name);
 
         RuleFor(x => x.Property.Details.AreaInSquareMeters)
-            .GreaterThanOrEqualTo(MinArea);
+            .GreaterThanOrEqualTo(MinArea)
+            .WithMessage(PropertyErrors.InvalidArea.Name);
 
         RuleFor(x => x.Property.Details.Description)
             .NotEmpty()
