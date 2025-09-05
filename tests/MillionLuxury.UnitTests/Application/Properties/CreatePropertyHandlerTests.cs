@@ -7,6 +7,7 @@ using MillionLuxury.Application.Common.Abstractions.Clock;
 using MillionLuxury.Application.Properties.CreateProperty;
 using MillionLuxury.Application.Properties.Dtos;
 using MillionLuxury.Domain.Abstractions;
+using MillionLuxury.Domain.Owners;
 using MillionLuxury.Domain.Properties;
 using MillionLuxury.Domain.Properties.ValueObjects;
 using Moq;
@@ -15,6 +16,7 @@ using Moq;
 public class CreatePropertyHandlerTests
 {
     private readonly Mock<IPropertyRepository> mockPropertyRepository;
+    private readonly Mock<IOwnerRepository> mockOwnerRepository;
     private readonly Mock<IUserContext> mockUserContext;
     private readonly Mock<IDateTimeProvider> mockDateTimeProvider;
     private readonly Mock<IUnitOfWork> mockUnitOfWork;
@@ -23,12 +25,14 @@ public class CreatePropertyHandlerTests
     public CreatePropertyHandlerTests()
     {
         mockPropertyRepository = new Mock<IPropertyRepository>();
+        mockOwnerRepository = new Mock<IOwnerRepository>();
         mockUserContext = new Mock<IUserContext>();
         mockDateTimeProvider = new Mock<IDateTimeProvider>();
         mockUnitOfWork = new Mock<IUnitOfWork>();
 
         handler = new CreatePropertyHandler(
             mockPropertyRepository.Object,
+            mockOwnerRepository.Object,
             mockDateTimeProvider.Object,
             mockUnitOfWork.Object
         );

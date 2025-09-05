@@ -51,14 +51,20 @@ internal sealed class PropertyMapping : IEntityTypeConfiguration<Property>
         builder.HasIndex(p => p.InternalCode).IsUnique();
         builder.Property(p => p.Year).IsRequired();
         builder.Property(p => p.OwnerId).IsRequired();
-        builder.Property(p => p.Status).IsRequired().HasConversion(
-            status => status.ToString(),
-            value => Enum.Parse<Domain.Properties.ValueObjects.PropertyStatus>(value)
-        );
+        builder.Property(p => p.Status)
+            .IsRequired()
+            .HasConversion(
+                status => status.ToString(),
+                value => Enum.Parse<Domain.Properties.ValueObjects.PropertyStatus>(value));
 
         builder.OwnsOne(p => p.Details, detailsBuilder =>
         {
-            detailsBuilder.Property(d => d.PropertyType).IsRequired().HasConversion<int>();
+            detailsBuilder.Property(d => d.PropertyType)
+                .IsRequired()
+                .HasConversion(
+                    propertyType => propertyType.ToString(),
+                    value => Enum.Parse<Domain.Properties.ValueObjects.PropertyType>(value));
+
             detailsBuilder.Property(d => d.Bedrooms).IsRequired();
             detailsBuilder.Property(d => d.Bathrooms).IsRequired();
             detailsBuilder.Property(d => d.AreaInSquareMeters).IsRequired().HasColumnType("decimal(10,2)");

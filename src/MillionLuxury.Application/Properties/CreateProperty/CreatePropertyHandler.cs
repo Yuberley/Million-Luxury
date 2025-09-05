@@ -4,6 +4,7 @@ namespace MillionLuxury.Application.Properties.CreateProperty;
 using MillionLuxury.Application.Common.Abstractions.Clock;
 using MillionLuxury.Application.Common.Abstractions.CQRS;
 using MillionLuxury.Domain.Abstractions;
+using MillionLuxury.Domain.Owners;
 using MillionLuxury.Domain.Properties;
 #endregion
 
@@ -11,16 +12,19 @@ internal sealed class CreatePropertyHandler : ICommandHandler<CreatePropertyComm
 {
     #region Private Members
     private readonly IPropertyRepository propertyRepository;
+    private readonly IOwnerRepository ownerRepository;
     private readonly IDateTimeProvider dateTimeProvider;
     private readonly IUnitOfWork unitOfWork;
     #endregion
 
     public CreatePropertyHandler(
         IPropertyRepository propertyRepository,
+        IOwnerRepository ownerRepository,
         IDateTimeProvider dateTimeProvider,
         IUnitOfWork unitOfWork)
     {
         this.propertyRepository = propertyRepository;
+        this.ownerRepository = ownerRepository;
         this.dateTimeProvider = dateTimeProvider;
         this.unitOfWork = unitOfWork;
     }
@@ -30,6 +34,13 @@ internal sealed class CreatePropertyHandler : ICommandHandler<CreatePropertyComm
         if (await propertyRepository.ExistsByInternalCodeAsync(request.Request.InternalCode, cancellationToken))
         {
             return Result.Failure<Guid>(PropertyErrors.InternalCodeAlreadyExists(request.Request.InternalCode));
+        }
+
+        var owner = await ownerRepository.GetByIdAsync(request.Request.OwnerId, cancellationToken);
+
+        if (owner is null)
+        {
+            return Result.Failure<Guid>(OwnerErrors.NotFound);
         }
 
         var property = request.Request.ToDomain(dateTimeProvider.UtcNow);
