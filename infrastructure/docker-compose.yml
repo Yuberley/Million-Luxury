@@ -30,7 +30,7 @@ services:
     ports:
       - '1433:1433'
     volumes:
-      - sqlserver-data:/var/opt/mssql   # solo este
+      - sqlserver-data:/var/opt/mssql
 
   minio:
     image: minio/minio:latest
